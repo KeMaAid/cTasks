@@ -7,3 +7,10 @@
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
+
+#ifndef ali2_h
+#define ali2_h
+
+
+
+#endif
