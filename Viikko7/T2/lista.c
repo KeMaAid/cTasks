@@ -35,8 +35,9 @@ Node * addLList(Node *pStart, int index, int *nextCallNumber){
     pNew->value=*nextCallNumber;
     pNew->pNext=NULL;
 
-    if(pStart == NULL){
-        pStart = pNew;
+    if(pStart == NULL || index ==0){
+        pNew->pNext=pStart;
+        pStart= pNew;
         //printf("DEBUG: Adding first element %p, value %d and pNext %p\n", pNew, pNew->value, pNew->pNext);
     } else {
         int i = 1;
@@ -94,7 +95,7 @@ Node * removeLList(Node *pStart, int index){
     }
     Node *ptr;
     int i = 0;
-    for(ptr = pStart;;ptr=ptr->pNext){
+    for(ptr = pStart;ptr != NULL;ptr=ptr->pNext){
         i++;
         if(i==index){
             Node * tmp = ptr->pNext->pNext;

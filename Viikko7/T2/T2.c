@@ -28,6 +28,7 @@ int menu(void){
 
 int main(void){
     int loopFlag = 1;
+    int temp = -1;
     int nextCallNumber=1;
     Node *pListStart = NULL;
     printf("Tämä ohjelma hallitsee listaa ja sen alkioita.\n");
@@ -45,16 +46,20 @@ int main(void){
                 printLList(pListStart);
                 break;
             case 3:
-                //TODO add mechanism to find index to insert
-                pListStart = addLList(pListStart, -1, &nextCallNumber);
+                printf("Monenneksi solmuksi alkio lisätään: ");
+                scanf("%d", &temp);
+                pListStart = addLList(pListStart, temp-1, &nextCallNumber);
+                temp = -1;
                 printLList(pListStart);
                 break;
             case 4:
                 pListStart = freeLList(pListStart);
                 break;
             case 5:
-                //TODO add mechanism to find index to insert
-                pListStart = removeLList(pListStart, -1);
+                printf("Mikä alkion solmu poistetaan: ");
+                scanf("%d", &temp);
+                pListStart = removeLList(pListStart, temp-1);
+                temp = -1;
                 break;
             case 6:
                 printLList(pListStart);
