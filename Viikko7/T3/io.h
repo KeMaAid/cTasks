@@ -8,3 +8,11 @@
  */
 /*******************************************************************/
 
+#ifndef io_h
+#define io_h
+
+void arvoNumerot(int *, int);
+int tarkistaNumero(int *, int, int);
+void tulostaNumerot(int *, int);
+
+#endif

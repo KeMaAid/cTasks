@@ -8,3 +8,10 @@
  */
 /*******************************************************************/
 
+#ifndef muisti_h
+#define musiti_h
+
+int* varaaMuistiaNumerolle(int);
+void vapautaMuisti(int*);
+
+#endif
