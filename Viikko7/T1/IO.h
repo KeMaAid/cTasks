@@ -7,17 +7,12 @@
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
-#include "IO.h"
-#include <stdlib.h>
-#include <stdio.h>
-#define reads 10
+#include <time.h>
+#ifndef IO_h
+#define IO_h
 
-int main(void){
-    int list[reads];
-    int sum;
-    printf("Askelanalyysi\n");
-    sum = lue_askeleet_listaan(list, reads);
-    tulosta_lista(list, reads);
-    printf("Askelia yhteensä: %d\n", sum);
-    return 0;
-}
+
+int lue_askeleet_listaan(int *, int);
+void tulosta_lista(int *, int);
+
+#endif
