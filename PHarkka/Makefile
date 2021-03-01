@@ -1,8 +1,8 @@
-ohjelma.exe: paaohjelma.o ali1.o 
-	gcc -o ohjelma.exe paaohjelma.o ali1.o
+ohjelma.exe: paaohjelma.o ali1.o ali2.o
+	gcc -o ohjelma.exe paaohjelma.o ali1.o ali2.o
 
-paaohjelma.o: paaohjelma.c ali1.o
-	gcc -c paaohjelma.c paaohjelma.c ali1.o -Wall std=c99
+paaohjelma.o: paaohjelma.c ali1.o ali2.o
+	gcc -c paaohjelma.c paaohjelma.c ali1.o ali2.o -Wall std=c99
 
 ali1.o: ali1.c ali1.h ali2.o
 	gcc -c ali1.c ali1.h ali2.o -Wall -std=c99
