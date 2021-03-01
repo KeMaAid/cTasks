@@ -9,7 +9,7 @@
 /*******************************************************************/
 #include <time.h>
 #define taskCharLen 16
-
+#define NumOfTasks 60
 
 #ifndef ali2_h
 #define ali2_h
@@ -27,8 +27,8 @@ typedef struct analNode {
     int returns; 
 } analNode;
 
-//void printLList(readNode *pStart);
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
 readNode * freeLList(readNode *pStart);
+void analFile(readNode *pStart, analNode * tasks, int analListSize);
 
 #endif

@@ -28,9 +28,10 @@
 
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
     readNode *pNew, *ptr;
+
     if((pNew = (readNode*)malloc(sizeof(readNode)))== NULL){
         printf("Muistin varaus epäonnistui.\n");
-        exit(0);
+        exit(1);
     }
 
     pNew->time=*(pTime);
@@ -45,14 +46,6 @@ readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iN
     } else {
         int i = 1;
         for(ptr = pStart;;ptr=ptr->pNext){
-            /*
-            insertion code
-            if(i==index){
-                pNew->pNext = ptr->pNext;
-                ptr->pNext=pNew;
-                break;
-            }
-            */
             if(ptr->pNext == NULL){
                 ptr->pNext=pNew;
                 break;
@@ -65,28 +58,46 @@ readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iN
 
 readNode * freeLList(readNode *pStart){
     readNode *ptr = pStart;
+
     while(ptr != NULL){
         pStart = ptr->pNext;
         free(ptr);
         ptr = pStart;
     }
+
     return pStart;
 }
-/*
-readNode * removeLList(readNode *pStart, int index){
-    if(index < 0 ){
-        return pStart;
+
+void analFile(readNode *pStart, analNode * tasks, int analListSize){
+    if(pStart == NULL){
+        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
+        return;
     }
-    readNode *ptr;
-    int i = 0;
-    for(ptr = pStart;ptr != NULL;ptr=ptr->pNext){
-        i++;
-        if(i==index){
-            readNode * tmp = ptr->pNext->pNext;
-            free(ptr->pNext);
-            ptr->pNext=tmp;
+
+    int numOfReturns;
+    int numOfReturnedTasks;
+    int iAverage;
+
+    for(int i = 0; i<analListSize; i++){
+        strcpy(tasks[i].name, "Tyhjä");
+        tasks[i].returns= 0;
+    }
+
+    for(readNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
+        strcpy(tasks[ptr->taskID-1].name, ptr->name);
+        tasks[ptr->taskID-1].returns += 1;
+    }
+
+    //Analysing
+    for(int i=0; i<analListSize;i++){
+        if(tasks[i].returns != 0){
+            numOfReturnedTasks++;
         }
+        numOfReturns += tasks[i].returns;
     }
-    return pStart;
+    iAverage = numOfReturns / numOfReturnedTasks;
+
+    printf("Palautuksia oli yhteensä %d, %d eri tehtävässä, keskimäärin %d per tehtävä.", numOfReturns, numOfReturnedTasks, iAverage);
+    printf("\n");
+    return;
 }
-*/

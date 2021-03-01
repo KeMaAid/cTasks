@@ -13,10 +13,15 @@
 #define ali1_h
 
 readNode* readFile();
-analNode* analFile(readNode *pStart);
-void printFile(analNode *pStart, int size);
-void saveToFile(analNode * pStart, int size);
+int printFile(analNode *pStart, int size);
+int saveToFile(analNode * pStart, int size);
 void findFile(char * target);
 int handleSaveChoice();
+
+#define StringLen 32
+#define LenTime 16
+#define printoutputformat "%s;%d\n"
+#define timeinputformat  "%d/%m/%y, %R"
+#define printtimeformat "%d.%m.%Y"
 
 #endif

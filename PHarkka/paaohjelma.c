@@ -28,7 +28,7 @@ int menu(void){
 int main(void){
     int loopFlag =1;
     readNode *pReadStart = NULL;
-    analNode *pAnalList=NULL;
+    analNode pAnalList[NumOfTasks];
     while(loopFlag){
         switch (menu())
         {
@@ -41,7 +41,7 @@ int main(void){
             pReadStart = readFile();
             break;
         case 2:
-            pAnalList = analFile(pReadStart);
+            analFile(pReadStart, pAnalList, NumOfTasks);
             break;
         case 3:
             printFile(pAnalList, NumOfTasks);
@@ -52,5 +52,4 @@ int main(void){
         }
     }
     printf("Kiitos ohjelman käytöstä.\n");
-
 }
