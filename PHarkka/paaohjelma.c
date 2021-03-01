@@ -10,6 +10,7 @@
 //main ja valikko
 
 #include "ali1.h"
+#include "ali2.h"
 #include <stdio.h>
 #define NumOfTasks 60
 
