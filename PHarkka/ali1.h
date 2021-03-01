@@ -13,8 +13,10 @@
 #define ali1_h
 
 readNode* readFile();
-analNode* analFile(readNode *);
-int printFile(analNode *, int);
+analNode* analFile(readNode *pStart);
+void printFile(analNode *pStart, int size);
+void saveToFile(analNode * pStart, int size);
 void findFile(char * target);
+int handleSaveChoice();
 
 #endif

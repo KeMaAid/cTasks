@@ -12,6 +12,7 @@
 #include "ali2.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #define StringLen 32
@@ -19,7 +20,7 @@
 #define NumOfTasks 60
 #define LenTime 16
 #define printoutputformat "%s;%d\n"
-#define printtimeformat "%d%.%m%.%Y"
+#define printtimeformat "%d.%m.%Y"
 
 readNode* readFile(){
     char fileName[StringLen];
@@ -43,12 +44,12 @@ readNode* readFile(){
     int iTaskID;
     int iUserID;
     struct tm *pTime;
-    while (fscanf(fPtr, "%s;%s;%d;%d", sTime, sTaskName, iTaskID, iUserID) != NULL){
+    while (fscanf(fPtr, "%s;%s;%d;%d", sTime, sTaskName, &iTaskID, &iUserID) != 0){
         iReturns++;
-        strptime(sTime, "%d/%%m/%%y, %%R", time);
-        if(difftime(minTime, pTime) > 0.0){
+        strptime(sTime, "%d/%m/%y, %R", time);
+        if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
             minTime = pTime;
-        } else if (difftime(maxTime, pTime) < 0.0){
+        } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
             maxTime = pTime;
         }
         pStart = addLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
@@ -73,7 +74,7 @@ analNode* analFile(readNode * pStart){
         return NULL;
     }
 
-    analNode tasks[NumOfTasks];
+    static analNode tasks[NumOfTasks];
     for(int i = 0; i<NumOfTasks; i++){
         strcpy(tasks[i].name, "Tyhjä");
         tasks[i].returns= 0;
@@ -88,10 +89,42 @@ analNode* analFile(readNode * pStart){
     return tasks;
 }
 
+void findFile(char * target){
+    printf("Anna tiedoston nimi: ");
+    scanf("%s", target);
+}
+
+int handleSaveChoice(){
+    char buffer;
+    printf("Tulosta tiedostoon (k/e)");
+    scanf("%c", &buffer);
+
+    if(buffer=='k'){
+        return 1;
+    } 
+    return 0;
+}
+
+void saveToFile(analNode * pStart, int size){
+    char fileName[StringLen];
+    FILE *fptr;
+    findFile(fileName);
+    if((fptr=fopen(fileName, "w")) == NULL){
+        perror("Tiedostoon kirjoittaminen epäonnistui");
+    }
+    fprintf(fptr, "Tehtävä;Lkm\n");
+    for(int i=0; i<size; i++){
+        fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
+        pStart++;
+    }
+    fclose(fptr);
+}
+
+
 void printFile(analNode * pStart, int size){
     if(pStart==NULL){
         printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n");
-        return NULL;
+        return;
     }
 
     int saveFlag = handleSaveChoice();
@@ -107,37 +140,5 @@ void printFile(analNode * pStart, int size){
         }
     }
     printf("\n");
-}
-
-void saveToFile(analNode * pStart, int size){
-    char fileName;
-    FILE *fptr;
-    findFile(fileName);
-    if((fptr=fopen(fileName, "w")) == NULL){
-        perror("Tiedostoon kirjoittaminen epäonnistui");
-    }
-    fprintf(fptr, "Tehtävä;Lkm\n");
-    for(int i=0; i<size; i++){
-        fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
-        pStart++;
-    }
-    fclose(fptr);
-}
-
-
-void findFile(char * target){
-    printf("Anna tiedoston nimi: ");
-    scanf("%s", target);
-}
-
-int handleSaveChoice(){
-    char buffer;
-    printf("Tulosta tiedostoon (k/e)");
-    scanf("%c", buffer);
-
-    if(buffer=='k'){
-        return 1;
-    } 
-    return 0;
 }
 

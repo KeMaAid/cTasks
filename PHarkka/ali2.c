@@ -11,6 +11,7 @@
 #include "ali2.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*void printLList(readNode *pStart){
     if(pStart == NULL){
@@ -25,15 +26,15 @@
     printf("\n");
 }*/
 
-readNode * addLList(readNode *pStart, struct tm pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
+readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
     readNode *pNew, *ptr;
     if((pNew = (readNode*)malloc(sizeof(readNode)))== NULL){
         printf("Muistin varaus epäonnistui.\n");
         exit(0);
     }
 
-    pNew->time=pTime;
-    strncpy(pNew->name, iNameLength, sTaskName);
+    pNew->time=*(pTime);
+    strncpy(pNew->name, sTaskName, iNameLength);
     pNew->taskID=iTaskID;
     pNew->userID=iUserID;
     pNew->pNext=NULL;
@@ -71,7 +72,7 @@ readNode * freeLList(readNode *pStart){
     }
     return pStart;
 }
-
+/*
 readNode * removeLList(readNode *pStart, int index){
     if(index < 0 ){
         return pStart;
@@ -88,4 +89,4 @@ readNode * removeLList(readNode *pStart, int index){
     }
     return pStart;
 }
-
+*/

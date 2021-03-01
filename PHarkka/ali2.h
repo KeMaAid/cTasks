@@ -8,18 +8,18 @@
  */
 /*******************************************************************/
 #include <time.h>
+#define taskCharLen 16
+
 
 #ifndef ali2_h
 #define ali2_h
-
-#define taskCharLen 16
 
 typedef struct readNode {
     struct tm time;
     char name[taskCharLen];
     int taskID;
     int userID;
-    readNode pNext;
+    struct readNode *pNext;
 } readNode;
 
 typedef struct analNode {
@@ -30,6 +30,5 @@ typedef struct analNode {
 //void printLList(readNode *pStart);
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
 readNode * freeLList(readNode *pStart);
-readNode * removeLList(readNode *pStart, int index);
 
 #endif
