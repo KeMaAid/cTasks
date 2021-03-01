@@ -15,5 +15,6 @@
 readNode* readFile();
 analNode* analFile(readNode *);
 int printFile(analNode *, int);
+void findFile(char * target);
 
 #endif

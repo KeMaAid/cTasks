@@ -25,14 +25,14 @@
     printf("\n");
 }*/
 
-readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
+readNode * addLList(readNode *pStart, struct tm pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
     readNode *pNew, *ptr;
     if((pNew = (readNode*)malloc(sizeof(readNode)))== NULL){
         printf("Muistin varaus epäonnistui.\n");
         exit(0);
     }
 
-    pNew->time=*pTime;
+    pNew->time=pTime;
     strncpy(pNew->name, iNameLength, sTaskName);
     pNew->taskID=iTaskID;
     pNew->userID=iUserID;
@@ -88,3 +88,4 @@ readNode * removeLList(readNode *pStart, int index){
     }
     return pStart;
 }
+

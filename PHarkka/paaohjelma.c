@@ -33,9 +33,11 @@ int main(void){
         switch (menu())
         {
         case 0:
+            freeLList(pReadStart);
             loopFlag = 0; //ihan hyvin vois käyttää loputonta silmukkaa ja goto:a (säästäisi pari mikrokoodiriviä ja pari bittiä)
             break;
         case 1:
+            freeLList(pReadStart);
             pReadStart = readFile();
             break;
         case 2:

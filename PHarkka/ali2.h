@@ -25,7 +25,6 @@ typedef struct readNode {
 typedef struct analNode {
     char name[taskCharLen];
     int returns; 
-    analNode pNext;
 } analNode;
 
 //void printLList(readNode *pStart);
