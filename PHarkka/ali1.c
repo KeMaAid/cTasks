@@ -31,14 +31,19 @@ readNode* readFile(){
     struct tm *minTime;
     struct tm *maxTime;
     // luodaan bufferit tiedostonlukua varten
-    char sTime[LenTime];
+    int minutes;
+    int hours;
+    int days;
+    int months;
+    int years;
     char sTaskName[taskCharLen];
     int iTaskID;
     int iUserID;
     struct tm *pTime;
-    while (fscanf(fPtr, "%s;%s;%d;%d", sTime, sTaskName, &iTaskID, &iUserID) != 0){
+    while (fscanf(fPtr, "%d/%d/%d, %d:%d;%s;%d;%d", &days, &minutes, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != 0){
         iReturns++;
-        strptime(sTime, timeinputformat, time);
+        
+        pTime = setTime(years, months, days, hours, minutes);
 
         if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
             minTime = pTime;

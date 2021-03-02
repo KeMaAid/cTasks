@@ -92,3 +92,20 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     printf("\n");
     return;
 }
+
+struct tm * setTime(int years, int months, int days, int hours, int minutes){
+    struct tm *pNew;
+    if((pNew = (struct tm*)malloc(sizeof(struct tm)))== NULL){
+        printf("Muistin varaus epäonnistui.\n");
+        exit(1);
+    }
+
+    //adding data to pTime
+    pNew->tm_min=minutes;
+    pNew->tm_hour=hours;
+    pNew->tm_mday=days;
+    pNew->tm_mon=months;
+    pNew->tm_year=years+100;
+
+    return pNew; 
+}
