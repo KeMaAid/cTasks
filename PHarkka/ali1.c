@@ -12,6 +12,8 @@
 #include "ali2.h"
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
+#include <stdlib.h>
 
 
 readNode* readFile(){
@@ -28,8 +30,9 @@ readNode* readFile(){
     fscanf(fPtr, "%*s\n");  // luetaan otsikko
     
     // variables for max and min time
-    struct tm *minTime= NULL;
-    struct tm *maxTime= NULL;
+    struct tm *minTime= strp(0,0,0,0,0);
+    struct tm *maxTime= strp(0,0,0,0,0);
+
     // luodaan bufferit tiedostonlukua varten
     int minutes;
     int hours;
@@ -41,18 +44,27 @@ readNode* readFile(){
     int iUserID;
     struct tm *pTime;
 
-    while (fscanf(fPtr, "%d/%d/%d, %d:%d;%s;%d;%d", &days, &months, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != -1){
+    while (fscanf(fPtr, "%d/%d/%d, %d:%d;%5s;%d;%d\n", &days, &months, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != -1){
         iReturns++;
-        printf("LOOPING with iter: %d task %s\n", iReturns, sTaskName);
+
         pTime = strp(years, months, days, hours, minutes);
 
-        if(minTime == NULL || maxTime == NULL){
-            minTime = pTime;
-            maxTime = pTime;
+        //debug
+        char tstring[32];
+        strftime(tstring,32,"%d/%m/%Y %H:%M",pTime);
+        printf("Adding to list %s;%s;%d;%d\n", tstring, sTaskName, iTaskID, iUserID);
+        
+
+        if(minTime->tm_mday==0){
+            printf("  Setting first min and max\n");
+            minTime=pTime;
+            maxTime=pTime;
         } else if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
-            minTime = pTime;
+            printf(" Iter %d pTime %s is smallest\n", iReturns, tstring);
+            minTime=pTime;
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
-            maxTime = pTime;
+            printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
+            maxTime=pTime;
         }
         pStart = addLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
     }
@@ -63,6 +75,8 @@ readNode* readFile(){
     char maxTimeBuffer[16];
     strftime(minTimeBuffer, 16, printtimeformat, minTime);
     strftime(maxTimeBuffer, 16, printtimeformat, maxTime);
+    free(minTime);
+    free(maxTime);
     
     printf("Yhteensä %d palautusta %s - %s väliseltä ajalta.", iReturns, minTimeBuffer, maxTimeBuffer);
     printf("\n");

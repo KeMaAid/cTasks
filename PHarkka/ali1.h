@@ -21,7 +21,6 @@ int handleSaveChoice();
 #define StringLen 32
 #define LenTime 16
 #define printoutputformat "%s;%d\n"
-#define timeinputformat  "%d/%m/%y, %R"
 #define printtimeformat "%d.%m.%Y"
 
 #endif

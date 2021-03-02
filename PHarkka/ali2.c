@@ -75,8 +75,8 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
 
     //Genereting the analList
     for(readNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-        strcpy(tasks[ptr->taskID-1].name, ptr->name);
-        tasks[ptr->taskID-1].returns += 1;
+        strcpy(tasks[(ptr->taskID)-1].name, ptr->name);
+        tasks[(ptr->taskID)-1].returns += 1;
     }
 
     //Analysing
@@ -99,12 +99,13 @@ struct tm * strp(int years, int months, int days, int hours, int minutes){
         printf("Muistin varaus epäonnistui.\n");
         exit(1);
     }
+    memset(pNew,0,sizeof(struct tm));
 
     //adding data to pTime
     pNew->tm_min=minutes;
     pNew->tm_hour=hours;
     pNew->tm_mday=days;
-    pNew->tm_mon=months;
+    pNew->tm_mon=months-1;
     pNew->tm_year=years+100;
 
     return pNew; 
