@@ -39,6 +39,7 @@ readNode* readFile(){
     while (fscanf(fPtr, "%s;%s;%d;%d", sTime, sTaskName, &iTaskID, &iUserID) != 0){
         iReturns++;
         strptime(sTime, timeinputformat, time);
+        
         if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
             minTime = pTime;
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){

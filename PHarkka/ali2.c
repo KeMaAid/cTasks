@@ -13,19 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*void printLList(readNode *pStart){
-    if(pStart == NULL){
-        //printf("Lista on tyhjä.\n");
-        printf("\n");
-        return;
-    }
-    //printf("Listassa on seuraavat luvut: \n");
-    for(readNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-        printf("%d ", ptr->value);
-    }
-    printf("\n");
-}*/
-
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
     readNode *pNew, *ptr;
 
@@ -34,12 +21,14 @@ readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iN
         exit(1);
     }
 
+    //setting the new node
     pNew->time=*(pTime);
     strncpy(pNew->name, sTaskName, iNameLength);
     pNew->taskID=iTaskID;
     pNew->userID=iUserID;
     pNew->pNext=NULL;
 
+    //adding node to list
     if(pStart == NULL){
         pNew->pNext=pStart;
         pStart= pNew;
@@ -78,11 +67,13 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     int numOfReturnedTasks;
     int iAverage;
 
+    
     for(int i = 0; i<analListSize; i++){
         strcpy(tasks[i].name, "Tyhjä");
         tasks[i].returns= 0;
     }
 
+    //Genereting the analList
     for(readNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
         strcpy(tasks[ptr->taskID-1].name, ptr->name);
         tasks[ptr->taskID-1].returns += 1;
