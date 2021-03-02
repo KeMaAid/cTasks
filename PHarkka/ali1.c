@@ -28,8 +28,8 @@ readNode* readFile(){
     fscanf(fPtr, "%*s\n");  // luetaan otsikko
     
     // variables for max and min time
-    struct tm *minTime;
-    struct tm *maxTime;
+    struct tm *minTime= NULL;
+    struct tm *maxTime= NULL;
     // luodaan bufferit tiedostonlukua varten
     int minutes;
     int hours;
@@ -40,12 +40,16 @@ readNode* readFile(){
     int iTaskID;
     int iUserID;
     struct tm *pTime;
-    while (fscanf(fPtr, "%d/%d/%d, %d:%d;%s;%d;%d", &days, &minutes, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != 0){
-        iReturns++;
-        
-        pTime = setTime(years, months, days, hours, minutes);
 
-        if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
+    while (fscanf(fPtr, "%d/%d/%d, %d:%d;%s;%d;%d", &days, &months, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != -1){
+        iReturns++;
+        printf("LOOPING with iter: %d task %s\n", iReturns, sTaskName);
+        pTime = strp(years, months, days, hours, minutes);
+
+        if(minTime == NULL || maxTime == NULL){
+            minTime = pTime;
+            maxTime = pTime;
+        } else if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
             minTime = pTime;
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
             maxTime = pTime;

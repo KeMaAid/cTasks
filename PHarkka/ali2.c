@@ -93,7 +93,7 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     return;
 }
 
-struct tm * setTime(int years, int months, int days, int hours, int minutes){
+struct tm * strp(int years, int months, int days, int hours, int minutes){
     struct tm *pNew;
     if((pNew = (struct tm*)malloc(sizeof(struct tm)))== NULL){
         printf("Muistin varaus epäonnistui.\n");

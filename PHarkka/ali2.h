@@ -30,6 +30,6 @@ typedef struct analNode {
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
 readNode * freeLList(readNode *pStart);
 void analFile(readNode *pStart, analNode * tasks, int analListSize);
-struct tm * setTime(int years, int months, int days, int hours, int minutes);
+struct tm * strp(int years, int months, int days, int hours, int minutes);
 
 #endif
