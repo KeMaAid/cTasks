@@ -79,8 +79,7 @@ readNode* readFile(){
     free(minTime);
     free(maxTime);
     
-    printf("Yhteensä %d palautusta %s - %s väliseltä ajalta.", iReturns, minTimeBuffer, maxTimeBuffer);
-    printf("\n");
+    printf("Yhteensä %d palautusta %s - %s väliseltä ajalta.\n", iReturns, minTimeBuffer, maxTimeBuffer);
     return pStart;
 }
 
@@ -114,9 +113,7 @@ int saveToFile(analNode * pStart, int size){
 
     fprintf(fptr, "Tehtävä;Lkm\n");
     for(int i=0; i<size; i++){
-        if(pStart->returns != 0){
-            fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
-        }
+        fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
         pStart++;
     }
 
@@ -127,7 +124,7 @@ int saveToFile(analNode * pStart, int size){
 
 int printFile(analNode * pStart, int size){
     if(pStart==NULL){
-        printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n\n");
+        printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n");
         return 2;
     }
 
@@ -141,13 +138,10 @@ int printFile(analNode * pStart, int size){
         //printf("\n");
         printf("Tehtävä;Lkm\n");
         for(int i=0; i<size; i++){
-            if(pStart->returns != 0){
-                printf(printoutputformat, pStart->name, pStart->returns);
-            }
+            printf(printoutputformat, pStart->name, pStart->returns);
             pStart++;
         }
     }
 
-    printf("\n");
     return 0;
 }

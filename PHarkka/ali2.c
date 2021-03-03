@@ -59,13 +59,13 @@ readNode * freeLList(readNode *pStart){
 
 void analFile(readNode *pStart, analNode * tasks, int analListSize){
     if(pStart == NULL){
-        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n\n");
+        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
         return;
     }
 
-    int numOfReturns;
-    int numOfReturnedTasks;
-    int iAverage;
+    int numOfReturns = 0;
+    int numOfReturnedTasks = 0;
+    int iAverage = 0;
 
     
     for(int i = 0; i<analListSize; i++){
@@ -89,7 +89,6 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     iAverage = numOfReturns / numOfReturnedTasks;
 
     printf("Palautuksia oli yhteensä %d, %d eri tehtävässä, keskimäärin %d per tehtävä.\n", numOfReturns, numOfReturnedTasks, iAverage);
-    printf("\n");
     return;
 }
 

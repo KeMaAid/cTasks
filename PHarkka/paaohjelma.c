@@ -39,12 +39,15 @@ int main(void){
         case 1:
             freeLList(pReadStart);
             pReadStart = readFile();
+            printf("\n");
             break;
         case 2:
             analFile(pReadStart, pAnalList, NumOfTasks);
+            printf("\n");
             break;
         case 3:
             printFile(pAnalList, NumOfTasks);
+            printf("\n");
             break;
         default:
             printf("Tuntematon valinta, yritä uudestaan.\n\n");
