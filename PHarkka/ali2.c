@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 
+ * Päivämäärä: 21-03-03
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -59,7 +59,7 @@ readNode * freeLList(readNode *pStart){
 
 void analFile(readNode *pStart, analNode * tasks, int analListSize){
     if(pStart == NULL){
-        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
+        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n\n");
         return;
     }
 
@@ -88,7 +88,7 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     }
     iAverage = numOfReturns / numOfReturnedTasks;
 
-    printf("Palautuksia oli yhteensä %d, %d eri tehtävässä, keskimäärin %d per tehtävä.", numOfReturns, numOfReturnedTasks, iAverage);
+    printf("Palautuksia oli yhteensä %d, %d eri tehtävässä, keskimäärin %d per tehtävä.\n", numOfReturns, numOfReturnedTasks, iAverage);
     printf("\n");
     return;
 }

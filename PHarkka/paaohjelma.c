@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 
+ * Päivämäärä: 21-03-02
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -51,5 +51,5 @@ int main(void){
             break;
         }
     }
-    printf("Kiitos ohjelman käytöstä.\n");
+    printf("Kiitos ohjelman käytöstä.\n\n");
 }

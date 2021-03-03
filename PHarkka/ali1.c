@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 
+ * Päivämäärä: 21-03-03
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -17,10 +17,11 @@
 
 
 readNode* readFile(){
+    int iReturns =0;
     char fileName[StringLen];
-    int iReturns;
     FILE *fPtr;
     readNode *pStart = NULL;
+
     findFile(fileName);
 
     if((fPtr = fopen(fileName, "r")) == NULL){
@@ -49,21 +50,21 @@ readNode* readFile(){
 
         pTime = strp(years, months, days, hours, minutes);
 
-        //debug
+        /*//debug
         char tstring[32];
         strftime(tstring,32,"%d/%m/%Y %H:%M",pTime);
         printf("Adding to list %s;%s;%d;%d\n", tstring, sTaskName, iTaskID, iUserID);
-        
-
+        */
+        // finding first and last return
         if(minTime->tm_mday==0){
-            printf("  Setting first min and max\n");
+            //printf("  Setting first min and max\n");
             minTime=pTime;
             maxTime=pTime;
         } else if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
-            printf(" Iter %d pTime %s is smallest\n", iReturns, tstring);
+            //printf(" Iter %d pTime %s is smallest\n", iReturns, tstring);
             minTime=pTime;
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
-            printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
+            //printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
             maxTime=pTime;
         }
         pStart = addLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
@@ -84,13 +85,15 @@ readNode* readFile(){
 }
 
 void findFile(char * target){
+    fflush(stdin); //tyhjennetään stdin
     printf("Anna tiedoston nimi: ");
     scanf("%s", target);
 }
 
 int handleSaveChoice(){
+    fflush(stdin); // tyhjennetään stdin
     char buffer;
-    printf("Tulosta tiedostoon (k/e)");
+    printf("Tulosta tiedostoon (k/e): ");
     scanf("%c", &buffer);
 
     if(buffer=='k'){
@@ -111,7 +114,9 @@ int saveToFile(analNode * pStart, int size){
 
     fprintf(fptr, "Tehtävä;Lkm\n");
     for(int i=0; i<size; i++){
-        fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
+        if(pStart->returns != 0){
+            fprintf(fptr, printoutputformat, pStart->name, pStart->returns);
+        }
         pStart++;
     }
 
@@ -122,7 +127,7 @@ int saveToFile(analNode * pStart, int size){
 
 int printFile(analNode * pStart, int size){
     if(pStart==NULL){
-        printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n");
+        printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n\n");
         return 2;
     }
 
@@ -133,10 +138,12 @@ int printFile(analNode * pStart, int size){
             return 1;
         }
     } else {
-        printf("\n");
+        //printf("\n");
         printf("Tehtävä;Lkm\n");
         for(int i=0; i<size; i++){
-            printf(printoutputformat, pStart->name, pStart->returns);
+            if(pStart->returns != 0){
+                printf(printoutputformat, pStart->name, pStart->returns);
+            }
             pStart++;
         }
     }
