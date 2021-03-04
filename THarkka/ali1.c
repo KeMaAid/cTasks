@@ -67,7 +67,7 @@ readNode* readFile(){
             //printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
             maxTime=pTime;
         }
-        pStart = addLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
+        pStart = addReadLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
     }
     fclose(fPtr);
 
@@ -157,7 +157,7 @@ int printDayFile(dayAnalNode * pStart){
     int saveFlag = handleSaveChoice();
 
     if(saveFlag){
-        if(saveDayAnalToFile(pStart)==1){
+        if(saveDayToFile(pStart)==1){
             return 1;
         }
     } else {

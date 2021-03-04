@@ -8,8 +8,8 @@ paaohjelma.o: paaohjelma.c ali1.h ali2.h
 ali1.o: ali1.c ali1.h ali2.h
 	gcc -c -g ali1.c ali1.h ali2.h -Wall -std=c99 
 
-ali2.o: ali2.c ali2.h
-	gcc -c -g ali2.c -Wall -std=c99 -o ali2.o
+ali2.o: ali2.c ali2.h ali1.h
+	gcc -c -g ali2.c ali2.h ali1.h -Wall -std=c99 -o ali2.o
 
 
 

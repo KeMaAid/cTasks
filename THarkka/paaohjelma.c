@@ -37,12 +37,12 @@ int main(void){
         switch (menu())
         {
         case 0:
-            freeLList(pReadStart);
-            freeLList(pDayAnalStart);
+            freeReadLList(pReadStart);
+            freeAnalLList(pDayAnalStart);
             loopFlag = 0; //ihan hyvin vois käyttää loputonta silmukkaa ja goto:a (säästäisi pari mikrokoodiriviä ja pari bittiä)
             break;
         case 1:
-            pReadStart = freeLList(pReadStart);
+            pReadStart = freeReadLList(pReadStart);
             pReadStart = readFile();
             printf("\n");
             break;
@@ -63,7 +63,7 @@ int main(void){
             printf("\n");
             break;
         case 6:
-            pDayAnalStart = freeLList(pDayAnalStart);
+            pDayAnalStart = freeAnalLList(pDayAnalStart);
             printf("\n");
             break;
         default:

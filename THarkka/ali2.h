@@ -34,8 +34,10 @@ typedef struct dayAnalNode{
 } dayAnalNode;
 
 
-readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
-readNode * freeLList(readNode *pStart);
+readNode * addReadLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
+dayAnalNode * addAnalLList(dayAnalNode * pStart, struct tm *pTime, int returns);
+readNode * freeReadLList(readNode *pStart);
+dayAnalNode * freeAnalLList(dayAnalNode * pStart);
 void analFile(readNode *pStart, analNode * tasks, int analListSize);
 dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart);
 struct tm * strp(int years, int months, int days, int hours, int minutes);

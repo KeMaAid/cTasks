@@ -9,11 +9,12 @@
 /*******************************************************************/
 //muut aliohjelmat
 #include "ali2.h"
+#include "ali1.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
+readNode * addReadLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID){
     readNode *pNew, *ptr;
 
     if((pNew = (readNode*)malloc(sizeof(readNode)))== NULL){
@@ -45,8 +46,50 @@ readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iN
     return pStart;
 }
 
-readNode * freeLList(readNode *pStart){
+dayAnalNode * addLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
+    dayAnalNode *pNew, *ptr;
+
+    if((pNew = (dayAnalNode*)malloc(sizeof(dayAnalNode)))== NULL){
+        printf("Muistin varaus epäonnistui.\n");
+        exit(1);
+    }
+
+    //setting the new node
+    pNew->time=pTime;
+    pNew->returns=iReturns;
+    pNew->pNext=NULL;
+
+    //adding node to list
+    if(pStart == NULL){
+        pNew->pNext=pStart;
+        pStart= pNew;
+    } else {
+        int i = 1;
+        for(ptr = pStart;;ptr=ptr->pNext){
+            if(ptr->pNext == NULL){
+                ptr->pNext=pNew;
+                break;
+            }
+            i++;
+        }
+    }
+    return pStart;
+}
+
+readNode * freeReadLList(readNode *pStart){
     readNode *ptr = pStart;
+
+    while(ptr != NULL){
+        pStart = ptr->pNext;
+        free(ptr);
+        ptr = pStart;
+    }
+
+    return NULL;
+}
+
+dayAnalNode * freeAnalLList(dayAnalNode *pStart){
+    dayAnalNode *ptr = pStart;
 
     while(ptr != NULL){
         pStart = ptr->pNext;
@@ -95,7 +138,7 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
 dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     if(pReadStart == NULL){
         printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
-        return;
+        return NULL;
     }
     // variables for max and min time
     struct tm *minTime= strp(0,0,0,0,0);
@@ -107,21 +150,39 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     int years;
 
     printf("Anna alku pvm (pp.mm.vvvv): ");
-    scanf("%d.%d.%d", days, months, years);
+    scanf("%d.%d.%d", &days, &months, &years);
     minTime = strp(years, months,days, 0, 0);
     printf("Anna loppu pvm (pp.mm.vvvv): ");
-    scanf("%d.%d.%d", days, months, years);
+    scanf("%d.%d.%d", &days, &months, &years);
     maxTime = strp(years, months,days, 0, 0);
 
-
+    int totNumOfReturns = 0;
     int numOfReturns = 0;
-    int numOfReturnedTasks = 0;
-    int iAverage = 0;    
+    struct tm *pLastTime = minTime;
     for(readNode *ptr=pReadStart; pReadStart != NULL; ptr=ptr->pNext){
-        
+        if((difftime(mktime(minTime), mktime(ptr->time)) < 0.0) && (difftime(mktime(maxTime), mktime(ptr->time)) > 0.0)){
+            totNumOfReturns++;
+
+            if(pLastTime->tm_year==ptr->time->tm_year && pLastTime->tm_mon==ptr->time->tm_mon && pLastTime->tm_mday== ptr->time->tm_mday){
+                numOfReturns++;
+            } else {
+                pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
+                numOfReturns=1;
+            }
+        }
     }
+    pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
 
 
+    //couple of buffers for strftime
+    char minTimeBuffer[16];
+    char maxTimeBuffer[16];
+    strftime(minTimeBuffer, 16, printtimeformat, minTime);
+    strftime(maxTimeBuffer, 16, printtimeformat, maxTime);
+    free(minTime);
+    free(maxTime);
+    
+    printf("Palautuksia oli yhteensä %d aikavälillä %s - %s.\n", totNumOfReturns, minTimeBuffer, maxTimeBuffer);
     return pAnalStart;
 }
 
