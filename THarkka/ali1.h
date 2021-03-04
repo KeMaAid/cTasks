@@ -15,8 +15,8 @@
 readNode* readFile();
 int printFile(analNode *pStart, int size);
 int saveToFile(analNode * pStart, int size);
-void findFile(char * target);
-int handleSaveChoice();
+int printDayFile(dayAnalNode *pStart);
+int saveDayToFile(dayAnalNode *pStart);
 
 #define StringLen 32
 #define LenTime 16

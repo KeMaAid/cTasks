@@ -15,7 +15,7 @@
 #define ali2_h
 
 typedef struct readNode {
-    struct tm time;
+    struct tm *time;
     char name[taskCharLen];
     int taskID;
     int userID;
@@ -27,9 +27,20 @@ typedef struct analNode {
     int returns; 
 } analNode;
 
+typedef struct dayAnalNode{
+    struct tm *time;
+    int returns;
+    struct dayAnalNode *pNext;
+} dayAnalNode;
+
+
 readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iNameLength, int iTaskID, int iUserID);
 readNode * freeLList(readNode *pStart);
 void analFile(readNode *pStart, analNode * tasks, int analListSize);
+dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart);
 struct tm * strp(int years, int months, int days, int hours, int minutes);
+void findFile(char * target);
+int handleSaveChoice();
+
 
 #endif

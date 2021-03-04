@@ -22,7 +22,7 @@ readNode * addLList(readNode *pStart, struct tm *pTime, char * sTaskName, int iN
     }
 
     //setting the new node
-    pNew->time=*(pTime);
+    pNew->time=pTime;
     strncpy(pNew->name, sTaskName, iNameLength);
     pNew->taskID=iTaskID;
     pNew->userID=iUserID;
@@ -54,7 +54,7 @@ readNode * freeLList(readNode *pStart){
         ptr = pStart;
     }
 
-    return pStart;
+    return NULL;
 }
 
 void analFile(readNode *pStart, analNode * tasks, int analListSize){
@@ -92,6 +92,40 @@ void analFile(readNode *pStart, analNode * tasks, int analListSize){
     return;
 }
 
+dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
+    if(pReadStart == NULL){
+        printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
+        return;
+    }
+    // variables for max and min time
+    struct tm *minTime= strp(0,0,0,0,0);
+    struct tm *maxTime= strp(0,0,0,0,0);
+
+    // luodaan bufferit tiedostonlukua varten
+    int days;
+    int months;
+    int years;
+
+    printf("Anna alku pvm (pp.mm.vvvv): ");
+    scanf("%d.%d.%d", days, months, years);
+    minTime = strp(years, months,days, 0, 0);
+    printf("Anna loppu pvm (pp.mm.vvvv): ");
+    scanf("%d.%d.%d", days, months, years);
+    maxTime = strp(years, months,days, 0, 0);
+
+
+    int numOfReturns = 0;
+    int numOfReturnedTasks = 0;
+    int iAverage = 0;    
+    for(readNode *ptr=pReadStart; pReadStart != NULL; ptr=ptr->pNext){
+        
+    }
+
+
+    return pAnalStart;
+}
+
+
 struct tm * strp(int years, int months, int days, int hours, int minutes){
     struct tm *pNew;
     if((pNew = (struct tm*)malloc(sizeof(struct tm)))== NULL){
@@ -108,4 +142,22 @@ struct tm * strp(int years, int months, int days, int hours, int minutes){
     pNew->tm_year=years+100;
 
     return pNew; 
+}
+
+void findFile(char * target){
+    fflush(stdin); //tyhjennetään stdin
+    printf("Anna tiedoston nimi: ");
+    scanf("%s", target);
+}
+
+int handleSaveChoice(){
+    fflush(stdin); // tyhjennetään stdin
+    char buffer;
+    printf("Tulosta tiedostoon (k/e): ");
+    scanf("%c", &buffer);
+
+    if(buffer=='k'){
+        return 1;
+    } 
+    return 0;
 }

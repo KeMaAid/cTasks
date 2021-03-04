@@ -83,24 +83,6 @@ readNode* readFile(){
     return pStart;
 }
 
-void findFile(char * target){
-    fflush(stdin); //tyhjennetään stdin
-    printf("Anna tiedoston nimi: ");
-    scanf("%s", target);
-}
-
-int handleSaveChoice(){
-    fflush(stdin); // tyhjennetään stdin
-    char buffer;
-    printf("Tulosta tiedostoon (k/e): ");
-    scanf("%c", &buffer);
-
-    if(buffer=='k'){
-        return 1;
-    } 
-    return 0;
-}
-
 int saveToFile(analNode * pStart, int size){
     char fileName[StringLen];
     FILE *fptr;
@@ -140,6 +122,49 @@ int printFile(analNode * pStart, int size){
         for(int i=0; i<size; i++){
             printf(printoutputformat, pStart->name, pStart->returns);
             pStart++;
+        }
+    }
+
+    return 0;
+}
+
+int saveDayToFile(dayAnalNode * pStart){
+    char fileName[StringLen];
+    char sBuffer[LenTime];
+    FILE *fptr;
+    findFile(fileName);
+
+    if((fptr=fopen(fileName, "w")) == NULL){
+        perror("Tiedostoon kirjoittaminen epäonnistui");
+        return 1;
+    }
+
+    fprintf(fptr, "Pvm;Lkm\n");
+    for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
+        strftime(sBuffer, LenTime, printtimeformat, ptr->time);
+        fprintf(fptr, printoutputformat, sBuffer, ptr->returns);
+    }
+    fclose(fptr);
+    return 0;
+}
+
+int printDayFile(dayAnalNode * pStart){
+    if(pStart==NULL){
+        printf("Ei tulostettavaa, suorita ensin päiväanalyysi.\n");
+        return 2;
+    }
+    char sBuffer[LenTime];
+    int saveFlag = handleSaveChoice();
+
+    if(saveFlag){
+        if(saveDayAnalToFile(pStart)==1){
+            return 1;
+        }
+    } else {
+        printf("Pvm;Lkm\n");
+        for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
+            strftime(sBuffer, LenTime, printtimeformat, ptr->time);
+            printf(printoutputformat, sBuffer, ptr->returns);
         }
     }
 
