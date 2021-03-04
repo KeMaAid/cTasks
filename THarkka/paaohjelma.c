@@ -21,7 +21,7 @@ int menu(void){
     printf("3) Tulosta tulokset\n");
     printf("4) Suorita päiväanalyysi\n");
     printf("5) Tulosta päiväanalyysin tulokset\n");
-    printf("6) Tyhjennä tuloslista");
+    printf("6) Tyhjennä tuloslista\n");
     printf("0) Lopeta\n");
     printf("Valintasi: ");
     scanf("%d", &temp);

@@ -28,7 +28,7 @@ typedef struct analNode {
 } analNode;
 
 typedef struct dayAnalNode{
-    struct tm *time;
+    struct tm time;
     int returns;
     struct dayAnalNode *pNext;
 } dayAnalNode;

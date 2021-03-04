@@ -58,14 +58,14 @@ readNode* readFile(){
         // finding first and last return
         if(minTime->tm_mday==0){
             //printf("  Setting first min and max\n");
-            minTime=pTime;
-            maxTime=pTime;
+            memcpy(minTime, pTime, sizeof(struct tm));
+            memcpy(maxTime, pTime, sizeof(struct tm));
         } else if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
             //printf(" Iter %d pTime %s is smallest\n", iReturns, tstring);
-            minTime=pTime;
+            memcpy(minTime, pTime, sizeof(struct tm));
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
             //printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
-            maxTime=pTime;
+            memcpy(maxTime, pTime, sizeof(struct tm));
         }
         pStart = addReadLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
     }
@@ -141,7 +141,7 @@ int saveDayToFile(dayAnalNode * pStart){
 
     fprintf(fptr, "Pvm;Lkm\n");
     for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-        strftime(sBuffer, LenTime, printtimeformat, ptr->time);
+        strftime(sBuffer, LenTime, printtimeformat, &(ptr->time));
         fprintf(fptr, printoutputformat, sBuffer, ptr->returns);
     }
     fclose(fptr);
@@ -163,7 +163,7 @@ int printDayFile(dayAnalNode * pStart){
     } else {
         printf("Pvm;Lkm\n");
         for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-            strftime(sBuffer, LenTime, printtimeformat, ptr->time);
+            strftime(sBuffer, LenTime, printtimeformat, &(ptr->time));
             printf(printoutputformat, sBuffer, ptr->returns);
         }
     }

@@ -46,7 +46,7 @@ readNode * addReadLList(readNode *pStart, struct tm *pTime, char * sTaskName, in
     return pStart;
 }
 
-dayAnalNode * addLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
+dayAnalNode * addAnalLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
     dayAnalNode *pNew, *ptr;
 
     if((pNew = (dayAnalNode*)malloc(sizeof(dayAnalNode)))== NULL){
@@ -55,7 +55,7 @@ dayAnalNode * addLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
     }
 
     //setting the new node
-    pNew->time=pTime;
+    pNew->time=*(pTime);
     pNew->returns=iReturns;
     pNew->pNext=NULL;
 
@@ -76,28 +76,18 @@ dayAnalNode * addLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
     return pStart;
 }
 
+#define freeLList while(ptr != NULL){pStart = ptr->pNext;free(ptr);ptr = pStart;}return NULL;
+
 readNode * freeReadLList(readNode *pStart){
     readNode *ptr = pStart;
 
-    while(ptr != NULL){
-        pStart = ptr->pNext;
-        free(ptr);
-        ptr = pStart;
-    }
-
-    return NULL;
+    freeLList
 }
 
 dayAnalNode * freeAnalLList(dayAnalNode *pStart){
     dayAnalNode *ptr = pStart;
 
-    while(ptr != NULL){
-        pStart = ptr->pNext;
-        free(ptr);
-        ptr = pStart;
-    }
-
-    return NULL;
+    freeLList
 }
 
 void analFile(readNode *pStart, analNode * tasks, int analListSize){
@@ -140,38 +130,48 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
         printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
         return NULL;
     }
-    // variables for max and min time
-    struct tm *minTime= strp(0,0,0,0,0);
-    struct tm *maxTime= strp(0,0,0,0,0);
 
-    // luodaan bufferit tiedostonlukua varten
+    // variables for max and min time
+    struct tm *minTime = NULL;
+    struct tm *maxTime = NULL;
+
+    // luodaan bufferit päivämäärien asettamista varten
     int days;
     int months;
     int years;
 
     printf("Anna alku pvm (pp.mm.vvvv): ");
-    scanf("%d.%d.%d", &days, &months, &years);
-    minTime = strp(years, months,days, 0, 0);
+    scanf("%d.%d.%*2d%d", &days, &months, &years);
+    minTime = strp(years, months, days, 0, 0);
     printf("Anna loppu pvm (pp.mm.vvvv): ");
-    scanf("%d.%d.%d", &days, &months, &years);
-    maxTime = strp(years, months,days, 0, 0);
+    scanf("%d.%d.%*2d%d", &days, &months, &years);
+    maxTime = strp(years, months, days, 0, 0);
 
     int totNumOfReturns = 0;
     int numOfReturns = 0;
-    struct tm *pLastTime = minTime;
-    for(readNode *ptr=pReadStart; pReadStart != NULL; ptr=ptr->pNext){
-        if((difftime(mktime(minTime), mktime(ptr->time)) < 0.0) && (difftime(mktime(maxTime), mktime(ptr->time)) > 0.0)){
+    struct tm *pLastTime =strp(0,0,0,0,0);
+    memcpy(pLastTime, minTime, sizeof(struct tm));
+    for(readNode *ptr=pReadStart; ptr != NULL; ptr=ptr->pNext){
+        printf("Looping %d.%d.%d %s\n", ptr->time->tm_mday, ptr->time->tm_mon+1, ptr->time->tm_year+1900, ptr->name);
+        if((difftime(mktime(minTime), mktime(ptr->time)) <= 0.0) && (difftime(mktime(maxTime), mktime(ptr->time)) >= 0.0)){
             totNumOfReturns++;
 
-            if(pLastTime->tm_year==ptr->time->tm_year && pLastTime->tm_mon==ptr->time->tm_mon && pLastTime->tm_mday== ptr->time->tm_mday){
+            if(pLastTime->tm_year==ptr->time->tm_year && pLastTime->tm_mon==ptr->time->tm_mon && pLastTime->tm_mday==ptr->time->tm_mday){
+                printf(" Same day as previous\n");
                 numOfReturns++;
             } else {
+                printf(" Day changed, adding last day to list\n");
                 pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
+                memcpy(pLastTime, ptr->time, sizeof(struct tm));
                 numOfReturns=1;
             }
         }
     }
-    pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
+    if(numOfReturns != 0){
+        printf("Adding final day to list\n");
+        pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
+    }
+    free(pLastTime);
 
 
     //couple of buffers for strftime
@@ -189,6 +189,7 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
 
 struct tm * strp(int years, int months, int days, int hours, int minutes){
     struct tm *pNew;
+
     if((pNew = (struct tm*)malloc(sizeof(struct tm)))== NULL){
         printf("Muistin varaus epäonnistui.\n");
         exit(1);
