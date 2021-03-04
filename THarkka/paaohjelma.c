@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 21-03-04
+ * Päivämäärä: 21-03-05
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -31,12 +31,12 @@ int menu(void){
     printf("0) Lopeta\n");
     printf("Valintasi: ");
     scanf("%d", &temp);
+    fflush(stdin);
     return(temp);
 }
 
 int main(void){
     int loopFlag =1;
-
     readNode *pReadStart = NULL;
     analNode pAnalList[NumOfTasks];
     dayAnalNode *pDayAnalStart = NULL;

@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 21-03-04
+ * Päivämäärä: 21-03-05
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -83,8 +83,8 @@ readNode* readFile(){
     //couple of buffers for strftime
     char minTimeBuffer[16];
     char maxTimeBuffer[16];
-    strftime(minTimeBuffer, 16, printtimeformat, minTime);
-    strftime(maxTimeBuffer, 16, printtimeformat, maxTime);
+    strftime(minTimeBuffer, LenTime, printtimeformat, minTime);
+    strftime(maxTimeBuffer, LenTime, printtimeformat, maxTime);
     free(minTime);
     free(maxTime);
     
