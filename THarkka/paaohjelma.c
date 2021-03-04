@@ -3,11 +3,17 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 21-03-02
+ * Päivämäärä: 21-03-04
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
-//main ja valikko
+
+/*******************************************************************/
+/* 
+ * Main ja sille menu-apufunktio
+ * 
+ */
+/*******************************************************************/
 
 #include "ali1.h"
 #include "ali2.h"
@@ -30,12 +36,12 @@ int menu(void){
 
 int main(void){
     int loopFlag =1;
+
     readNode *pReadStart = NULL;
     analNode pAnalList[NumOfTasks];
     dayAnalNode *pDayAnalStart = NULL;
     while(loopFlag){
-        switch (menu())
-        {
+        switch (menu()){
         case 0:
             freeReadLList(pReadStart);
             freeAnalLList(pDayAnalStart);
@@ -55,6 +61,7 @@ int main(void){
             printf("\n");
             break;
         case 4:
+            //pDayAnalStartista alkaa Linkitettyä listaa ei poisteta, sillä käyttäjä voi haluta monta eri päivähaarukkaa tulostukseen.
             pDayAnalStart = dayAnalFile(pDayAnalStart, pReadStart);
             printf("\n");
             break;

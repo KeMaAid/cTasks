@@ -7,6 +7,16 @@
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
+
+/*******************************************************************/
+/* 
+ * Headerit ali2.c
+ * Määrittää rakenteet readNode, analNode ja dayAnalNode
+ * Määrittää pari käytettävää vakiota
+ * Esittelee funktiot
+ */
+/*******************************************************************/
+
 #include <time.h>
 #define taskCharLen 16
 #define NumOfTasks 60
@@ -28,7 +38,7 @@ typedef struct analNode {
 } analNode;
 
 typedef struct dayAnalNode{
-    struct tm time;
+    struct tm *time;
     int returns;
     struct dayAnalNode *pNext;
 } dayAnalNode;
@@ -43,6 +53,5 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart);
 struct tm * strp(int years, int months, int days, int hours, int minutes);
 void findFile(char * target);
 int handleSaveChoice();
-
 
 #endif

@@ -3,11 +3,17 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 21-03-03
+ * Päivämäärä: 21-03-04
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
-//Tiedostonkäsittely
+
+/*******************************************************************/
+/* 
+ * Tiedostoja käsittelevät aliohjelmat
+ */
+/*******************************************************************/
+
 #include "ali1.h"
 #include "ali2.h"
 #include <stdio.h>
@@ -15,6 +21,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+/*
+ * Function: readFile()
+ * ----------------------
+ * 
+ * Aliohjelma kysyy käyttäjältä tiedoston nimen ja lukee sieltä
+ * Palautusaika;TehtavaNimi;TehtavaID;KayttajaID tyypitettyä dataa
+ * ja luo niistä linkitetyn listan jonka ensimmäisen elementin palauttaa
+ * 
+ * Returns: Linkitetyn listan ensimmäinen elementti
+ */
 
 readNode* readFile(){
     int iReturns =0;
@@ -50,21 +66,14 @@ readNode* readFile(){
 
         pTime = strp(years, months, days, hours, minutes);
 
-        /*//debug
-        char tstring[32];
-        strftime(tstring,32,"%d/%m/%Y %H:%M",pTime);
-        printf("Adding to list %s;%s;%d;%d\n", tstring, sTaskName, iTaskID, iUserID);
-        */
+        
         // finding first and last return
         if(minTime->tm_mday==0){
-            //printf("  Setting first min and max\n");
             memcpy(minTime, pTime, sizeof(struct tm));
             memcpy(maxTime, pTime, sizeof(struct tm));
         } else if(difftime(mktime(minTime), mktime(pTime)) > 0.0){
-            //printf(" Iter %d pTime %s is smallest\n", iReturns, tstring);
             memcpy(minTime, pTime, sizeof(struct tm));
         } else if (difftime(mktime(maxTime), mktime(pTime)) < 0.0){
-            //printf(" Iter %d pTime %s is largest\n", iReturns, tstring);
             memcpy(maxTime, pTime, sizeof(struct tm));
         }
         pStart = addReadLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
@@ -83,9 +92,25 @@ readNode* readFile(){
     return pStart;
 }
 
+/*
+ * Function saveToFile
+ * -------------------
+ * 
+ * avustaja funktio printFile funktiolle, tapauksessa jolloin pitää kirjoittaa tiedostoon
+ * kysyy käyttäjältä tiedoston nimen ja kirjoittaa yli formaatilla
+ * Tehtävä;Lkm
+ * 
+ * pStart: analNode tyyppisen listan ensimmäinen osoitin
+ * size: listan koko
+ * 
+ * Returns: 0 jos onnistui
+ *          1 jos epäonnistui
+ */
+
 int saveToFile(analNode * pStart, int size){
     char fileName[StringLen];
     FILE *fptr;
+
     findFile(fileName);
 
     if((fptr=fopen(fileName, "w")) == NULL){
@@ -103,6 +128,19 @@ int saveToFile(analNode * pStart, int size){
     return 0;
 }
 
+/*
+ * Function printFile
+ * -------------------
+ * 
+ * analNode tyyppisen tiedoston kirjoittaminen tiedostoon tai terminaaliin
+ * Tehtävä;Lkm
+ * 
+ * pStart: analNode tyyppisen listan ensimmäinen osoitin
+ * size: listan koko
+ * 
+ * Returns: 0 jos onnistui
+ *          1 jos epäonnistui
+ */
 
 int printFile(analNode * pStart, int size){
     if(pStart==NULL){
@@ -117,7 +155,6 @@ int printFile(analNode * pStart, int size){
             return 1;
         }
     } else {
-        //printf("\n");
         printf("Tehtävä;Lkm\n");
         for(int i=0; i<size; i++){
             printf(printoutputformat, pStart->name, pStart->returns);
@@ -127,6 +164,21 @@ int printFile(analNode * pStart, int size){
 
     return 0;
 }
+
+
+/*
+ * Function saveDayToFile
+ * -------------------
+ * 
+ * avustaja funktio printDayFile funktiolle, tapauksessa jolloin pitää kirjoittaa tiedostoon
+ * kysyy käyttäjältä tiedoston nimen ja kirjoittaa yli formaatilla
+ * Pvm;Lkm
+ * 
+ * pStart: dayAnalNode tyyppisen linkitetyn listan ensimmäinen osoitin
+ * 
+ * Returns: 0 jos onnistui
+ *          1 jos epäonnistui
+ */
 
 int saveDayToFile(dayAnalNode * pStart){
     char fileName[StringLen];
@@ -141,12 +193,25 @@ int saveDayToFile(dayAnalNode * pStart){
 
     fprintf(fptr, "Pvm;Lkm\n");
     for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-        strftime(sBuffer, LenTime, printtimeformat, &(ptr->time));
+        strftime(sBuffer, LenTime, printtimeformat, ptr->time);
         fprintf(fptr, printoutputformat, sBuffer, ptr->returns);
     }
     fclose(fptr);
     return 0;
 }
+
+/*
+ * Function printDayFile
+ * -------------------
+ * 
+ * analNode tyyppisen tiedoston kirjoittaminen tiedostoon tai terminaaliin kysyy käyttäjältä.
+ * Pvm;Lkm
+ * 
+ * pStart: dayAnalNode tyyppisen linkitetyn listan ensimmäinen osoitin
+ * 
+ * Returns: 0 jos onnistui
+ *          1 jos epäonnistui
+ */
 
 int printDayFile(dayAnalNode * pStart){
     if(pStart==NULL){
@@ -163,7 +228,7 @@ int printDayFile(dayAnalNode * pStart){
     } else {
         printf("Pvm;Lkm\n");
         for(dayAnalNode *ptr = pStart;ptr != NULL; ptr=ptr->pNext){
-            strftime(sBuffer, LenTime, printtimeformat, &(ptr->time));
+            strftime(sBuffer, LenTime, printtimeformat, ptr->time);
             printf(printoutputformat, sBuffer, ptr->returns);
         }
     }

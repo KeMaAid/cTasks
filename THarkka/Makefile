@@ -1,4 +1,8 @@
-# Makefile
+# Makefile for the whole program
+#Tekijä Konsta Keski-Mattinen
+#Opiskelijanumero: 0568752
+#Päivämäärä 21-03-04
+
 ohjelma.exe: paaohjelma.o ali1.o ali2.o
 	gcc -o ohjelma.exe -g paaohjelma.o ali1.o ali2.o -Wall -std=c99
 
