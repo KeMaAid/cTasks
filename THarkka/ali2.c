@@ -3,7 +3,7 @@
  * Otsikkotiedot:
  * Tekijä: Konsta Keski-Mattinen
  * Opiskelijanumero: 0568752
- * Päivämäärä: 21-03-04
+ * Päivämäärä: 21-03-05
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /*******************************************************************/
@@ -101,8 +101,17 @@ dayAnalNode * addAnalLList(dayAnalNode *pStart, struct tm *pTime, int iReturns){
         exit(1);
     }
 
+    //generating a copy of pTime
+    struct tm *pTimeLocal;
+    if((pTimeLocal = (struct tm*)malloc(sizeof(struct tm)))== NULL){
+        printf("Muistin varaus epäonnistui.\n");
+        exit(1);
+    }
+    memcpy(pTimeLocal, pTime, sizeof(struct tm));
+
+
     //setting the new node
-    pNew->time=pTime;
+    pNew->time=pTimeLocal;
     pNew->returns=iReturns;
     pNew->pNext=NULL;
 
@@ -205,7 +214,7 @@ void analFile(readNode *pStart, analNode * tasks, int size){
  * Function dayAnalNode
  * ---------------------
  * 
- * Kysyy käyttäjältä kaksi päivää ja analysoi vasemman käden säännöllä päivien välissä olevia palautuksia per päivä
+ * Kysyy käyttäjältä kaksi päivää ja analysoi päiviän välissä tapahtuneet palautukset (myös merkatut päivät)
  *  
  * pAnalStart: tallennettavaan linkitetyn lstan ensimmäisen tietuen osoite
  * pReadStart: luettavan linkitetyn listan ensimmäisen tietueen osoite
@@ -214,6 +223,8 @@ void analFile(readNode *pStart, analNode * tasks, int size){
  *          tai NULL, jos ei ole luettavaa listaa
  */
 
+#define daySeconds 86400
+
 dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     if(pReadStart == NULL){
         printf("Ei analysoitavaa, lue ensin palautustiedosto.\n");
@@ -221,14 +232,15 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     }
 
     // variables for max and min time
-    struct tm *minTime = NULL;
-    struct tm *maxTime = NULL;
+    struct tm *minTime;
+    struct tm *maxTime;
 
     // luodaan bufferit päivämäärien asettamista varten
     int days;
     int months;
     int years;
 
+    fflush(stdin);
     printf("Anna alku pvm (pp.mm.vvvv): ");
     scanf("%d.%d.%*2d%d", &days, &months, &years);
     minTime = strp(years, months, days, 0, 0);
@@ -238,41 +250,46 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
 
 
 
-    int totNumOfReturns = 0;
+    time_t compTime= mktime(minTime); //used as a stepper for days
+
+    //luodaan linkitetty lista, johon syötetään dataa
+    int diffdays =(int)(difftime(mktime(maxTime), mktime(minTime))) / daySeconds;
+    for(int i = 0;i<=diffdays;i++){
+        pAnalStart= addAnalLList(pAnalStart, localtime(&compTime), 0);
+        compTime += daySeconds;
+    }
+
     int numOfReturns = 0;
-    struct tm *pLastTime = strp(0,0,0,0,0);
-    memcpy(pLastTime, minTime, sizeof(struct tm));
+    //analysoidaan
+    for(readNode *ptr=pReadStart;ptr != NULL;ptr=ptr->pNext){
+        compTime = mktime(ptr->time);
+        if(difftime(mktime(minTime), compTime) < 0.0){
+            printf("Current day in outer loop %d.%d.%d\n", ptr->time->tm_mday, ptr->time->tm_mon+1, ptr->time->tm_year+1900);
 
-    for(readNode *ptr=pReadStart; ptr != NULL; ptr=ptr->pNext){
-        if((difftime(mktime(minTime), mktime(ptr->time)) < 0.0) && (difftime(mktime(maxTime), mktime(ptr->time)) > 0.0)){
-            totNumOfReturns++;
-
-            //if date is same as previous
-            if(pLastTime->tm_year==ptr->time->tm_year && pLastTime->tm_mon==ptr->time->tm_mon && pLastTime->tm_mday==ptr->time->tm_mday){
-                numOfReturns++;
-            } else {
-                pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns); // adding the previous day to list
-                memcpy(pLastTime, ptr->time, sizeof(struct tm));
-                numOfReturns=1;
+            for(dayAnalNode *ptrAnal=pAnalStart;ptrAnal != NULL;ptrAnal=ptrAnal->pNext){
+                printf(" Current day in inner loop %d.%d.%d\n", ptrAnal->time->tm_mday, ptrAnal->time->tm_mon+1, ptrAnal->time->tm_year+1900);
+                //jos molemmissa on päivä sama
+                if(ptr->time->tm_year==ptrAnal->time->tm_year && ptr->time->tm_mon==ptrAnal->time->tm_mon && ptr->time->tm_mday==ptrAnal->time->tm_mday){
+                    printf("  Adding a return\n");
+                    numOfReturns++;
+                    ptrAnal->returns +=1;
+                    break;
+                }         
             }
         }
     }
-    //adding the final day to list
-    if(numOfReturns != 0){
-        pAnalStart= addAnalLList(pAnalStart, pLastTime, numOfReturns);
-    }
-    free(pLastTime);
+    
 
 
     //couple of buffers for strftime
     char minTimeBuffer[16];
     char maxTimeBuffer[16];
-    strftime(minTimeBuffer, 16, printtimeformat, minTime);
-    strftime(maxTimeBuffer, 16, printtimeformat, maxTime);
+    strftime(minTimeBuffer, LenTime, printtimeformat, minTime);
+    strftime(maxTimeBuffer, LenTime, printtimeformat, maxTime);
     free(minTime);
     free(maxTime);
     
-    printf("Palautuksia oli yhteensä %d aikavälillä %s - %s.\n", totNumOfReturns, minTimeBuffer, maxTimeBuffer);
+    printf("Palautuksia oli yhteensä %d aikavälillä %s - %s.\n", numOfReturns, minTimeBuffer, maxTimeBuffer);
     return pAnalStart;
 }
 
