@@ -67,6 +67,7 @@ readNode* readFile(){
         pTime = strp(years, months, days, hours, minutes, 0);
         
         // finding first and last return
+        //MinGW-W64 x86_64-posix-seh 10.2.0 sisältää bugin jossa memcpy korruptoi dataa, jos päivät näyttävät villeiltä
         if(minTime->tm_mday==0){
             memcpy(minTime, pTime, sizeof(struct tm));
             memcpy(maxTime, pTime, sizeof(struct tm));
@@ -76,7 +77,7 @@ readNode* readFile(){
             memcpy(maxTime, pTime, sizeof(struct tm));
         }
         pStart = addReadLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
-        printf("day %d.%d.%d %d:%d name %s tid %d uid %d\n", pTime->tm_mday, pTime->tm_mon+1, pTime->tm_year+1900, pTime->tm_hour, pTime->tm_min, sTaskName, iTaskID, iUserID);
+
     }
     fclose(fPtr);
 
@@ -143,7 +144,7 @@ int saveToFile(analNode * pStart, int size){
  */
 
 int printFile(analNode * pStart, int size){
-    if(*(pStart->name) != 'T' || *(pStart->name) != 'L'){
+    if(!(*(pStart->name) == 'T' || *(pStart->name) == 'L')){
         printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n");
         return 2;
     }

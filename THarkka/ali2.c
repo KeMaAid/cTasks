@@ -266,12 +266,12 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
             /*if(difftime(mktime(maxTime), compTime) < -daySeconds){
                 break;
             }*/
-            printf("Current day in outer loop %d.%d.%d\n", ptr->time->tm_mday, ptr->time->tm_mon+1, ptr->time->tm_year+1900);
+           
             for(dayAnalNode *ptrAnal=pAnalStart;ptrAnal != NULL;ptrAnal=ptrAnal->pNext){
-                printf(" Current day in inner loop %d.%d.%d\n", ptrAnal->time->tm_mday, ptrAnal->time->tm_mon+1, ptrAnal->time->tm_year+1900);
+               
                 //jos molemmissa on päivä sama
                 if(ptr->time->tm_year==ptrAnal->time->tm_year && ptr->time->tm_mon==ptrAnal->time->tm_mon && ptr->time->tm_mday==ptrAnal->time->tm_mday){
-                    printf("  Adding a return\n");
+                    
                     numOfReturns++;
                     ptrAnal->returns +=1;
                     break;
@@ -289,7 +289,8 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     strftime(maxTimeBuffer, LenTime, printtimeformat, maxTime);
     free(minTime);
     free(maxTime);
-    
+
+    printf("Palautuksia oli yhteensä %d aikavälillä %s - %s.\n", numOfReturns, minTimeBuffer, maxTimeBuffer);
     return pAnalStart;
 }
 
@@ -323,7 +324,6 @@ struct tm * strp(int years, int months, int days, int hours, int minutes, int se
     pNew->tm_mon=months-1;
     pNew->tm_year=years+100;
 
-    printf("  strp:  %d.%d.%d %d:%d\n", pNew->tm_mday, pNew->tm_mon+1, pNew->tm_year+1900, pNew->tm_hour, pNew->tm_min);
     return pNew; 
 }
 
