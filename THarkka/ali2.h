@@ -50,7 +50,7 @@ readNode * freeReadLList(readNode *pStart);
 dayAnalNode * freeAnalLList(dayAnalNode * pStart);
 void analFile(readNode *pStart, analNode * tasks, int analListSize);
 dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart);
-struct tm * strp(int years, int months, int days, int hours, int minutes);
+struct tm * strp(int years, int months, int days, int hours, int minutes, int seconds);
 void findFile(char * target);
 int handleSaveChoice();
 

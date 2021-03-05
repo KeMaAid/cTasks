@@ -20,8 +20,9 @@
 #include <stdio.h>
 #define NumOfTasks 60
 
-int menu(void){
-    int temp;
+char menu(void){
+    fflush(stdin);
+    char temp;
     printf("1) Lue tiedosto\n");
     printf("2) Analysoi tiedot\n");
     printf("3) Tulosta tulokset\n");
@@ -30,7 +31,7 @@ int menu(void){
     printf("6) Tyhjennä tuloslista\n");
     printf("0) Lopeta\n");
     printf("Valintasi: ");
-    scanf("%d", &temp);
+    scanf("%c", &temp);
     fflush(stdin);
     return(temp);
 }
@@ -41,35 +42,35 @@ int main(void){
     analNode pAnalList[NumOfTasks];
     dayAnalNode *pDayAnalStart = NULL;
     while(loopFlag){
-        switch (menu()){
-        case 0:
+        switch ((int)menu()){
+        case (int)'0':
             freeReadLList(pReadStart);
             freeAnalLList(pDayAnalStart);
             loopFlag = 0; //ihan hyvin vois käyttää loputonta silmukkaa ja goto:a (säästäisi pari mikrokoodiriviä ja pari bittiä)
             break;
-        case 1:
+        case (int)'1':
             pReadStart = freeReadLList(pReadStart);
             pReadStart = readFile();
             printf("\n");
             break;
-        case 2:
+        case (int)'2':
             analFile(pReadStart, pAnalList, NumOfTasks);
             printf("\n");
             break;
-        case 3:
+        case (int)'3':
             printFile(pAnalList, NumOfTasks);
             printf("\n");
             break;
-        case 4:
+        case (int)'4':
             //pDayAnalStartista alkaa Linkitettyä listaa ei poisteta, sillä käyttäjä voi haluta monta eri päivähaarukkaa tulostukseen.
             pDayAnalStart = dayAnalFile(pDayAnalStart, pReadStart);
             printf("\n");
             break;
-        case 5:
+        case (int)'5':
             printDayFile(pDayAnalStart);
             printf("\n");
             break;
-        case 6:
+        case (int)'6':
             pDayAnalStart = freeAnalLList(pDayAnalStart);
             printf("\n");
             break;

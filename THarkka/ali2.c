@@ -243,17 +243,16 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     fflush(stdin);
     printf("Anna alku pvm (pp.mm.vvvv): ");
     scanf("%d.%d.%*2d%d", &days, &months, &years);
-    minTime = strp(years, months, days, 0, 0);
+    minTime = strp(years, months, days, 0, 0, 0);
     printf("Anna loppu pvm (pp.mm.vvvv): ");
     scanf("%d.%d.%*2d%d", &days, &months, &years);
-    maxTime = strp(years, months, days, 0, 0);
+    maxTime = strp(years, months, days, 23, 59, 59);
 
 
 
     time_t compTime= mktime(minTime); //used as a stepper for days
-
     //luodaan linkitetty lista, johon syötetään dataa
-    int diffdays =(int)(difftime(mktime(maxTime), mktime(minTime))) / daySeconds;
+    int diffdays = (difftime(mktime(maxTime), mktime(minTime)) / daySeconds);
     for(int i = 0;i<=diffdays;i++){
         pAnalStart= addAnalLList(pAnalStart, localtime(&compTime), 0);
         compTime += daySeconds;
@@ -264,8 +263,10 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     for(readNode *ptr=pReadStart;ptr != NULL;ptr=ptr->pNext){
         compTime = mktime(ptr->time);
         if(difftime(mktime(minTime), compTime) < 0.0){
+            /*if(difftime(mktime(maxTime), compTime) < -daySeconds){
+                break;
+            }*/
             printf("Current day in outer loop %d.%d.%d\n", ptr->time->tm_mday, ptr->time->tm_mon+1, ptr->time->tm_year+1900);
-
             for(dayAnalNode *ptrAnal=pAnalStart;ptrAnal != NULL;ptrAnal=ptrAnal->pNext){
                 printf(" Current day in inner loop %d.%d.%d\n", ptrAnal->time->tm_mday, ptrAnal->time->tm_mon+1, ptrAnal->time->tm_year+1900);
                 //jos molemmissa on päivä sama
@@ -289,7 +290,6 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
     free(minTime);
     free(maxTime);
     
-    printf("Palautuksia oli yhteensä %d aikavälillä %s - %s.\n", numOfReturns, minTimeBuffer, maxTimeBuffer);
     return pAnalStart;
 }
 
@@ -305,7 +305,7 @@ dayAnalNode * dayAnalFile(dayAnalNode * pAnalStart, readNode *pReadStart){
  * Returns: Pointer to a newly allocated tm struct
  */
 
-struct tm * strp(int years, int months, int days, int hours, int minutes){
+struct tm * strp(int years, int months, int days, int hours, int minutes, int seconds){
     struct tm *pNew;
 
     if((pNew = (struct tm*)malloc(sizeof(struct tm)))== NULL){
@@ -314,13 +314,16 @@ struct tm * strp(int years, int months, int days, int hours, int minutes){
     }
     memset(pNew,0,sizeof(struct tm));
 
+
     //adding data to pTime
+    pNew->tm_sec=seconds;
     pNew->tm_min=minutes;
     pNew->tm_hour=hours;
     pNew->tm_mday=days;
     pNew->tm_mon=months-1;
     pNew->tm_year=years+100;
 
+    printf("  strp:  %d.%d.%d %d:%d\n", pNew->tm_mday, pNew->tm_mon+1, pNew->tm_year+1900, pNew->tm_hour, pNew->tm_min);
     return pNew; 
 }
 

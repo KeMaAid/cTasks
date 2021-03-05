@@ -47,8 +47,8 @@ readNode* readFile(){
     fscanf(fPtr, "%*s\n");  // luetaan otsikko
     
     // variables for max and min time
-    struct tm *minTime= strp(0,0,0,0,0);
-    struct tm *maxTime= strp(0,0,0,0,0);
+    struct tm *minTime= strp(0,0,0,0,0,0);
+    struct tm *maxTime= strp(0,0,0,0,0,0);
 
     // luodaan bufferit tiedostonlukua varten
     int minutes;
@@ -64,8 +64,7 @@ readNode* readFile(){
     while (fscanf(fPtr, "%d/%d/%d, %d:%d;%5s;%d;%d\n", &days, &months, &years, &hours, &minutes, sTaskName, &iTaskID, &iUserID) != -1){
         iReturns++;
 
-        pTime = strp(years, months, days, hours, minutes);
-
+        pTime = strp(years, months, days, hours, minutes, 0);
         
         // finding first and last return
         if(minTime->tm_mday==0){
@@ -77,6 +76,7 @@ readNode* readFile(){
             memcpy(maxTime, pTime, sizeof(struct tm));
         }
         pStart = addReadLList(pStart, pTime, sTaskName, taskCharLen, iTaskID, iUserID);
+        printf("day %d.%d.%d %d:%d name %s tid %d uid %d\n", pTime->tm_mday, pTime->tm_mon+1, pTime->tm_year+1900, pTime->tm_hour, pTime->tm_min, sTaskName, iTaskID, iUserID);
     }
     fclose(fPtr);
 
@@ -143,7 +143,7 @@ int saveToFile(analNode * pStart, int size){
  */
 
 int printFile(analNode * pStart, int size){
-    if(pStart==NULL){
+    if(*(pStart->name) != 'T' || *(pStart->name) != 'L'){
         printf("Ei tulostettavaa, analysoi ensin palautustiedosto.\n");
         return 2;
     }
